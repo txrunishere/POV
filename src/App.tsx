@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router";
-import { ROUTES } from "./utils/constants";
+import { ROUTES } from "./lib/constants";
 import AuthLayout from "./_auth/auth-layout";
 import SigninForm from "./_auth/forms/signin-form";
 import SignupForm from "./_auth/forms/signup-form";
