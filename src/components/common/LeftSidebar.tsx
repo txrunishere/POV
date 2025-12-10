@@ -16,15 +16,13 @@ const LeftSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { user, isLoading } = useAuth();
+  const { user } = useAuth();
 
   useEffect(() => {
     if (isSuccess) {
       navigate("/sign-in");
     }
   }, [isSuccess]);
-
-  if (isLoading) return <p>Loading...</p>;
 
   return (
     <section className="hidden min-w-[270px] flex-col justify-center bg-black px-6 pt-0 pb-8 md:flex">

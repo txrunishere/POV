@@ -22,7 +22,7 @@ const TopBar = () => {
   }, [isSuccess]);
 
   return (
-    <section className="sticky top-0 z-50 w-full bg-black/80 md:hidden">
+    <section className="sticky top-0 z-50 w-full bg-black md:hidden">
       <nav className="flex items-center justify-between px-4">
         <Link className="" to={"/"}>
           <img className="size-16" src="./pov.png" alt="pov-logo" />

@@ -3,11 +3,11 @@ import { Outlet } from "react-router";
 
 const RootLayout = () => {
   return (
-    <div className="relative w-full md:flex">
+    <div className="w-full md:flex">
       <TopBar />
       <LeftSidebar />
 
-      <section className="flex h-full flex-1">
+      <section className="flex h-auto flex-1 not-md:pb-28">
         <Outlet />
       </section>
 

@@ -28,4 +28,12 @@ export const SignInFormSchema = z.object({
 });
 type ISignInSchema = z.infer<typeof SignInFormSchema>;
 
-export type { ISignUpSchema, ISignInSchema };
+export const CreatePostSchema = z.object({
+  caption: z.string().min(5, { error: "Too short!!" }).max(2200),
+  location: z.string().min(2).max(100),
+  tags: z.string(),
+  photos: z.instanceof(File),
+});
+type ICreatePost = z.infer<typeof CreatePostSchema>;
+
+export type { ISignUpSchema, ISignInSchema, ICreatePost };
