@@ -14,6 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 import FileUploader from "../common/FileUploader";
 import { CreatePostSchema } from "@/lib/validation";
+import { createPostMutation } from "@/lib/react-query/mutations";
+import { useAuth } from "@/context/auth-context";
 
 const PostForm = ({
   post,
@@ -37,8 +39,21 @@ const PostForm = ({
     reValidateMode: "onChange",
   });
 
-  function onSubmit(values: z.infer<typeof CreatePostSchema>) {
-    console.log(values);
+  const { user } = useAuth();
+
+  const {
+    data,
+    mutateAsync: createPost,
+    isPending: createPostLoading,
+  } = createPostMutation();
+
+  console.log(data);
+
+  async function onSubmit(values: z.infer<typeof CreatePostSchema>) {
+    await createPost({
+      ...values,
+      userId: user.id,
+    });
   }
 
   return (
@@ -114,6 +129,7 @@ const PostForm = ({
           <Button type="submit">Submit</Button>
         </div>
       </form>
+      {data && <img src={data.imageUrl} alt="" />}
     </Form>
   );
 };

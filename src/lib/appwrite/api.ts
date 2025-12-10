@@ -1,6 +1,7 @@
-import { account, appwriteConfig, avatars, tables } from "./config";
+import { account, appwriteConfig, avatars, storage, tables } from "./config";
 import { ID, Query } from "appwrite";
-import type { INewUser } from "@/types";
+import type { INewPost, INewUser } from "@/types";
+import { da } from "zod/v4/locales";
 
 // REGISTER USER
 const createUser = async (data: INewUser) => {
@@ -82,4 +83,41 @@ const signOutUser = async () => {
   }
 };
 
-export { createUser, signInUser, getCurrentUser, signOutUser };
+const createPost = async (data: INewPost) => {
+  try {
+    const uploadImage = await storage.createFile({
+      bucketId: appwriteConfig.appwriteStorageId,
+      fileId: ID.unique(),
+      file: data.photos,
+    });
+
+    if (!uploadImage) throw Error;
+
+    const imageUrl = storage.getFilePreview({
+      bucketId: appwriteConfig.appwriteStorageId,
+      fileId: uploadImage.$id,
+    });
+
+    if (!imageUrl) throw Error;
+
+    const newPost = await tables.createRow({
+      databaseId: appwriteConfig.appwriteDatabaseId,
+      tableId: appwriteConfig.appwritePostsTableId,
+      rowId: ID.unique(),
+      data: {
+        creator: data.userId,
+        caption: data.caption,
+        location: data.location,
+        tags: data.tags?.split(",").forEach((i) => i.trim()),
+        imageId: uploadImage.$id,
+        imageUrl,
+      },
+    });
+
+    return newPost;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { createUser, signInUser, getCurrentUser, signOutUser, createPost };
