@@ -4,6 +4,14 @@ export const ROUTES = {
   HOME: "/",
   SIGNIN: "/sign-in",
   SIGNUP: "/sign-up",
+  EXPLORE: "/explore",
+  ALLUSERS: "/all-users",
+  SAVED: "/saved",
+  CREATEPOST: "/create-post",
+  PROFILE: "/profile/:id/*",
+  UPDATEPOST: "/update-post/:id",
+  UPDATEPROFILE: "/update-profile/:id",
+  POSTDETAILS: "/posts/:id",
 };
 
 export const sidebarLinks = [
