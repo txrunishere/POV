@@ -73,4 +73,13 @@ const getCurrentUser = async () => {
   }
 };
 
-export { createUser, signInUser, getCurrentUser };
+const signOutUser = async () => {
+  try {
+    const res = await account.deleteSession("current");
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { createUser, signInUser, getCurrentUser, signOutUser };
