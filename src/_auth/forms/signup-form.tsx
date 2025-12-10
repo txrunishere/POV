@@ -13,13 +13,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { SignUpFormSchema, type ISignUpSchema } from "@/lib/validation";
 import { Loader } from "@/components/common";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import {
   loginUserMutation,
   registerUserMutation,
 } from "@/lib/react-query/mutations";
 import { toast } from "sonner";
 import type { AppwriteException } from "appwrite";
+import { useAuth } from "@/context/auth-context";
 
 const SignupForm = () => {
   const form = useForm<ISignUpSchema>({
@@ -33,6 +34,9 @@ const SignupForm = () => {
       password: "",
     },
   });
+
+  const { checkAuthUser, isLoading: isUserLoading } = useAuth();
+  const navigate = useNavigate();
 
   const { mutateAsync: createNewUser, isPending: userCreateLoading } =
     registerUserMutation();
@@ -48,13 +52,24 @@ const SignupForm = () => {
           email: data.email,
           password: data.password,
         });
-        console.log(session);
+
+        if (session) {
+          const isAuthUser = await checkAuthUser();
+
+          if (isAuthUser) {
+            form.reset();
+            navigate("/");
+          }
+        } else {
+          toast.error("Sign in failed, please try again.");
+        }
+      } else {
+        toast.error("Sign up failed, please try again.");
       }
     } catch (error) {
       const e = error as AppwriteException;
       toast.error(e.message);
     }
-    form.reset();
   };
 
   const isLoading = userCreateLoading || userLoginLoading;

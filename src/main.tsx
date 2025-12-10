@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router";
 import { ThemeProvider } from "./components/theme-provider.tsx";
 import { Toaster } from "./components/ui/sonner.tsx";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import AuthContextProvider from "./context/auth-context.tsx";
 
 const queryClient = new QueryClient();
 
@@ -14,7 +15,9 @@ createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
         <QueryClientProvider client={queryClient}>
-          <App />
+          <AuthContextProvider>
+            <App />
+          </AuthContextProvider>
         </QueryClientProvider>
         <Toaster />
       </ThemeProvider>

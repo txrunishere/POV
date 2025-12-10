@@ -1,5 +1,5 @@
 import { account, appwriteConfig, avatars, tables } from "./config";
-import { ID } from "appwrite";
+import { ID, Query } from "appwrite";
 import type { INewUser } from "@/types";
 
 // REGISTER USER
@@ -16,8 +16,6 @@ const createUser = async (data: INewUser) => {
   const userAvatar = avatars.getInitials({
     name: user.name,
   });
-
-  console.log(userAvatar);
 
   const userDocument = await createUserDocument({
     accountId: user.$id,
@@ -56,4 +54,23 @@ const createUserDocument = async (data: {
   return res;
 };
 
-export { createUser, signInUser };
+const getCurrentUser = async () => {
+  try {
+    const session = await account.get();
+
+    if (!session) throw Error;
+
+    const user = await tables.listRows({
+      databaseId: appwriteConfig.appwriteDatabaseId,
+      tableId: appwriteConfig.appwriteUsersTableId,
+      queries: [Query.equal("accountId", session.$id)],
+    });
+
+    return user.rows[0];
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
+export { createUser, signInUser, getCurrentUser };
