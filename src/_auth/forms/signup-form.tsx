@@ -14,7 +14,12 @@ import { Input } from "@/components/ui/input";
 import { SignUpFormSchema, type ISignUpSchema } from "@/lib/validation";
 import { Loader } from "@/components/common";
 import { Link } from "react-router";
-import { createUser } from "@/lib/appwrite/api";
+import {
+  loginUserMutation,
+  registerUserMutation,
+} from "@/lib/react-query/mutations";
+import { toast } from "sonner";
+import type { AppwriteException } from "appwrite";
 
 const SignupForm = () => {
   const form = useForm<ISignUpSchema>({
@@ -29,11 +34,30 @@ const SignupForm = () => {
     },
   });
 
+  const { mutateAsync: createNewUser, isPending: userCreateLoading } =
+    registerUserMutation();
+  const { mutateAsync: loginUser, isPending: userLoginLoading } =
+    loginUserMutation();
+
   const onSubmit = async (data: ISignUpSchema) => {
-    const res = await createUser(data);
-    console.log(res);
+    try {
+      const res = await createNewUser(data);
+
+      if (res) {
+        const session = await loginUser({
+          email: data.email,
+          password: data.password,
+        });
+        console.log(session);
+      }
+    } catch (error) {
+      const e = error as AppwriteException;
+      toast.error(e.message);
+    }
     form.reset();
   };
+
+  const isLoading = userCreateLoading || userLoginLoading;
 
   return (
     <Form {...form}>
@@ -111,12 +135,8 @@ const SignupForm = () => {
             )}
           />
 
-          <Button
-            disabled={form.formState.isSubmitting}
-            className="w-full"
-            type="submit"
-          >
-            {form.formState.isSubmitting ? (
+          <Button disabled={isLoading} className="w-full" type="submit">
+            {isLoading ? (
               <span className="flex items-center gap-2">
                 <Loader /> Loading...
               </span>
