@@ -15,4 +15,17 @@ export const SignUpFormSchema = z.object({
 });
 type ISignUpSchema = z.infer<typeof SignUpFormSchema>;
 
-export type { ISignUpSchema };
+export const SignInFormSchema = z.object({
+  email: z.string().email({ error: "Invalid Email" }),
+  password: z
+    .string()
+    .min(8, {
+      error: "Password must be at least 8 letters long",
+    })
+    .max(50, {
+      error: "Password must be at most 50 letters long",
+    }),
+});
+type ISignInSchema = z.infer<typeof SignInFormSchema>;
+
+export type { ISignUpSchema, ISignInSchema };
