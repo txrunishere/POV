@@ -12,21 +12,24 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
-import FileUploader from "../common/FileUploader";
 import { CreatePostSchema } from "@/lib/validation";
-import { createPostMutation } from "@/lib/react-query/mutations";
+import {
+  createPostMutation,
+  updatePostMutation,
+} from "@/lib/react-query/mutations";
 import { useAuth } from "@/context/auth-context";
 import { useNavigate } from "react-router";
+import { useState } from "react";
+import type { Models } from "appwrite";
+import { toast } from "sonner";
+import { Loader } from "../common";
 
 const PostForm = ({
   post,
+  action,
 }: {
-  post?: {
-    imageUrl: string;
-    caption: string;
-    tags: Array<string>;
-    location: string;
-  };
+  post?: Models.DefaultRow;
+  action: "create" | "update";
 }) => {
   const form = useForm<z.infer<typeof CreatePostSchema>>({
     resolver: zodResolver(CreatePostSchema),
@@ -43,18 +46,40 @@ const PostForm = ({
   const navigate = useNavigate();
   const { user } = useAuth();
 
+  const [fileUrl, setFileUrl] = useState<string>(post?.imageUrl || "");
+
   const { mutateAsync: createPost, isPending: createPostLoading } =
     createPostMutation();
 
-  async function onSubmit(values: z.infer<typeof CreatePostSchema>) {
-    const res = await createPost({
-      ...values,
-      userId: user.id,
-    });
+  const { mutateAsync: updatePost, isPending: updatePostLoading } =
+    updatePostMutation();
 
-    if (res) {
-      form.reset();
-      navigate("/");
+  async function onSubmit(values: z.infer<typeof CreatePostSchema>) {
+    if (action === "create") {
+      const res = await createPost({
+        ...values,
+        photos: values.photos[0],
+        userId: user.id,
+      });
+
+      if (res) {
+        form.reset();
+        navigate("/");
+      }
+    } else {
+      const res = await updatePost({
+        ...values,
+        file: values.photos,
+        postId: post?.$id || "",
+        imageUrl: post?.imageUrl,
+        imageId: post?.imageId,
+      });
+
+      if (!res) {
+        toast.error("Unable to Update! Please try again");
+      } else {
+        navigate(`/posts/${post?.$id}`);
+      }
     }
   }
 
@@ -81,19 +106,35 @@ const PostForm = ({
         <FormField
           control={form.control}
           name="photos"
-          render={({ field }) => (
+          render={({ field: { onChange } }) => (
             <FormItem>
               <FormLabel>Add Photos</FormLabel>
               <FormControl>
-                <FileUploader
-                  fieldChange={field.onChange}
-                  mediaUrl={post?.imageUrl || ""}
+                <Input
+                  className=""
+                  type="file"
+                  onChange={(e) => {
+                    onChange(e.target.files);
+                    if (e.target.files && e.target.files[0]) {
+                      const url = URL.createObjectURL(e.target.files[0]);
+                      setFileUrl(url);
+                    }
+                  }}
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        <div>
+          {fileUrl && (
+            <img
+              className="mx-auto w-[80%] object-cover object-center md:w-[70%]"
+              src={fileUrl}
+              alt="image"
+            />
+          )}
+        </div>
 
         <FormField
           control={form.control}
@@ -102,7 +143,7 @@ const PostForm = ({
             <FormItem>
               <FormLabel>Location</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input type="text" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -117,6 +158,7 @@ const PostForm = ({
               <FormLabel>Tags (seperated by comma " , ")</FormLabel>
               <FormControl>
                 <Input
+                  type="text"
                   {...field}
                   className="placeholder:text-sm"
                   placeholder="Art, Design, Learn"
@@ -127,9 +169,15 @@ const PostForm = ({
           )}
         />
         <div className="flex items-center justify-end gap-4">
-          <Button variant={"outline"}>Cancel</Button>
-          <Button disabled={createPostLoading} type="submit">
-            Submit
+          <Button
+            disabled={createPostLoading || updatePostLoading}
+            type="submit"
+          >
+            {updatePostLoading || createPostLoading ? (
+              <Loader />
+            ) : (
+              <>{action === "create" ? "Create" : "Update"} Post</>
+            )}
           </Button>
         </div>
       </form>

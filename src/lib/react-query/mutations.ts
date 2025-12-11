@@ -7,8 +7,9 @@ import {
   likePost,
   savePost,
   deleteSavedPost,
+  updatePost,
 } from "../appwrite/api";
-import type { INewPost, INewUser } from "@/types";
+import type { INewPost, INewUser, IUpdatePost } from "@/types";
 import { QUERY_KEYS } from "./query-keys";
 import type { Models } from "appwrite";
 
@@ -104,6 +105,19 @@ const deleteSavedPostMutation = () => {
   });
 };
 
+const updatePostMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: IUpdatePost) => updatePost(data),
+    onSuccess: (data: Models.DefaultRow | undefined) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id],
+      });
+    },
+  });
+};
+
 export {
   registerUserMutation,
   loginUserMutation,
@@ -112,4 +126,5 @@ export {
   likePostMutation,
   savePostMutation,
   deleteSavedPostMutation,
+  updatePostMutation,
 };

@@ -1,6 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "./query-keys";
-import { fetchRecentPosts, getCurrentUser } from "../appwrite/api";
+import {
+  fetchRecentPosts,
+  getCurrentUser,
+  fetchPostById,
+} from "../appwrite/api";
 
 const getRecentPosts = () => {
   return useQuery({
@@ -16,4 +20,12 @@ const getCurrentUserQuery = () => {
   });
 };
 
-export { getRecentPosts, getCurrentUserQuery };
+const getPostByIdMutation = ({ postId }: { postId: string }) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
+    queryFn: () => fetchPostById({ postId }),
+    enabled: !!postId,
+  });
+};
+
+export { getRecentPosts, getCurrentUserQuery, getPostByIdMutation };

@@ -1,6 +1,6 @@
 import { account, appwriteConfig, avatars, tables } from "./config";
 import { ID, Query } from "appwrite";
-import type { INewPost, INewUser } from "@/types";
+import type { INewPost, INewUser, IUpdatePost } from "@/types";
 import axios from "axios";
 
 // REGISTER USER
@@ -90,10 +90,10 @@ const createPost = async (data: INewPost) => {
   try {
     const form = new FormData();
     form.append("file", data.photos);
-    form.append("upload_preset", "POV-cloudinary");
-    form.append("cloud_name", "dpp16pzli");
+    form.append("upload_preset", import.meta.env.VITE_CLOUDINARY_PRESET);
+    form.append("cloud_name", import.meta.env.VITE_CLOUDINARY_NAME);
     const image = await axios.post(
-      "https://api.cloudinary.com/v1_1/dpp16pzli/image/upload",
+      `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`,
       form,
     );
 
@@ -202,6 +202,89 @@ const deleteSavedPost = async ({ savedPostId }: { savedPostId: string }) => {
   }
 };
 
+const fetchPostById = async ({ postId }: { postId: string }) => {
+  try {
+    const post = await tables.getRow({
+      databaseId: appwriteConfig.appwriteDatabaseId,
+      tableId: appwriteConfig.appwritePostsTableId,
+      rowId: postId,
+    });
+
+    if (!post) throw Error;
+
+    return post;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+async function updatePost(post: IUpdatePost) {
+  const hasFileToUpdate = post.file.length > 0;
+
+  try {
+    let imageInfo = {
+      imageUrl: post.imageUrl,
+      imageId: post.imageId,
+    };
+
+    if (hasFileToUpdate) {
+      const form = new FormData();
+      form.append("file", post.file[0]);
+      form.append("upload_preset", import.meta.env.VITE_CLOUDINARY_PRESET);
+      form.append("cloud_name", import.meta.env.VITE_CLOUDINARY_NAME);
+      const image = await axios.post(
+        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`,
+        form,
+      );
+
+      imageInfo = {
+        ...image,
+        imageUrl: image.data.secure_url,
+        imageId: image.data.public_id,
+      };
+    }
+
+    const tags = post.tags?.replace(/ /g, "").split(",") || [];
+
+    const updatedPost = await tables.updateRow({
+      databaseId: appwriteConfig.appwriteDatabaseId,
+      tableId: appwriteConfig.appwritePostsTableId,
+      rowId: post.postId,
+      data: {
+        caption: post.caption,
+        imageUrl: imageInfo.imageUrl,
+        imageId: imageInfo.imageId,
+        location: post.location,
+        tags: tags,
+      },
+    });
+
+    if (!updatedPost) {
+      throw Error;
+    }
+
+    return updatedPost;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const deletePost = async ({ postId }: { postId: string }) => {
+  try {
+    const post = await tables.deleteRow({
+      databaseId: appwriteConfig.appwriteDatabaseId,
+      tableId: appwriteConfig.appwritePostsTableId,
+      rowId: postId,
+    });
+
+    if (!post) throw Error;
+
+    return { status: "ok" };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   createUser,
   signInUser,
@@ -212,4 +295,7 @@ export {
   likePost,
   savePost,
   deleteSavedPost,
+  fetchPostById,
+  updatePost,
+  deletePost,
 };
