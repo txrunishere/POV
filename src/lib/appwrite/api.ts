@@ -64,7 +64,10 @@ const getCurrentUser = async () => {
     const user = await tables.listRows({
       databaseId: appwriteConfig.appwriteDatabaseId,
       tableId: appwriteConfig.appwriteUsersTableId,
-      queries: [Query.equal("accountId", session.$id)],
+      queries: [
+        Query.equal("accountId", session.$id),
+        Query.select(["*", "liked.$id", "saved.*"]),
+      ],
     });
 
     return user.rows[0];
@@ -140,7 +143,7 @@ const likePost = async ({
   likesArray: string[];
 }) => {
   try {
-    const updatedPost = await tables.upsertRow({
+    const updatedPost = await tables.updateRow({
       databaseId: appwriteConfig.appwriteDatabaseId,
       tableId: appwriteConfig.appwritePostsTableId,
       rowId: postId,
@@ -175,7 +178,7 @@ const savePost = async ({
       },
     });
 
-    if (save) throw Error;
+    if (!save) throw Error;
 
     return save;
   } catch (error) {
@@ -191,12 +194,11 @@ const deleteSavedPost = async ({ savedPostId }: { savedPostId: string }) => {
       rowId: savedPostId,
     });
 
-    if (savedPost) throw Error;
+    if (!savedPost) throw Error;
 
     return { status: "ok" };
   } catch (error) {
     console.log(error);
-    return null;
   }
 };
 

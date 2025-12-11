@@ -16,7 +16,7 @@ const Home = () => {
               <Loader />
             ) : (
               recentPosts?.rows.map((post) => (
-                <li>
+                <li key={post.$createdAt}>
                   <PostCard post={post} />
                 </li>
               ))

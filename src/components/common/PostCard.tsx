@@ -3,9 +3,8 @@ import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { Link } from "react-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { Bookmark, Edit, Heart } from "lucide-react";
+import { Edit } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
-import { Button } from "../ui/button";
 import PostAction from "./PostAction";
 
 dayjs().format();
@@ -17,8 +16,6 @@ type IPostCardProps = {
 
 const PostCard = ({ post }: IPostCardProps) => {
   const { user } = useAuth();
-
-  console.log({ userId: user.id, postId: post.creator.$id });
 
   return (
     <Card>
@@ -48,12 +45,22 @@ const PostCard = ({ post }: IPostCardProps) => {
           )}
         </div>
       </CardHeader>
-      <CardContent>
-        <img
-          className="h-70 w-full rounded-xl object-cover object-center"
-          src={post.imageUrl}
-          alt=""
-        />
+      <CardContent className="space-y-4">
+        <div className="space-y-1">
+          <p className="text-base font-semibold">{post.caption}</p>
+          <ul className="text-muted-foreground flex items-center gap-2 text-sm">
+            {post.tags?.map((tag: string, i: number) => (
+              <li key={`${tag}-${i}`}>#{tag}</li>
+            ))}
+          </ul>
+        </div>
+        <Link to={`/posts/${post.$id}`}>
+          <img
+            className="h-70 w-full rounded-xl object-cover object-center"
+            src={post.imageUrl}
+            alt=""
+          />
+        </Link>
       </CardContent>
       <CardFooter>
         <PostAction post={post} userId={user.id} />

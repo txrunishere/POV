@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "./query-keys";
-import { fetchRecentPosts } from "../appwrite/api";
+import { fetchRecentPosts, getCurrentUser } from "../appwrite/api";
 
 const getRecentPosts = () => {
   return useQuery({
@@ -9,4 +9,11 @@ const getRecentPosts = () => {
   });
 };
 
-export { getRecentPosts };
+const getCurrentUserQuery = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+    queryFn: getCurrentUser,
+  });
+};
+
+export { getRecentPosts, getCurrentUserQuery };
