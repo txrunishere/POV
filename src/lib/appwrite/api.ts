@@ -89,7 +89,7 @@ const signOutUser = async () => {
 const createPost = async (data: INewPost) => {
   try {
     const form = new FormData();
-    form.append("file", data.photos);
+    form.append("file", data.file);
     form.append("upload_preset", import.meta.env.VITE_CLOUDINARY_PRESET);
     form.append("cloud_name", import.meta.env.VITE_CLOUDINARY_NAME);
     const image = await axios.post(
@@ -219,7 +219,8 @@ const fetchPostById = async ({ postId }: { postId: string }) => {
 };
 
 async function updatePost(post: IUpdatePost) {
-  const hasFileToUpdate = post.file.length > 0;
+  let hasFileToUpdate;
+  if (post.file) hasFileToUpdate = post?.file.length > 0;
 
   try {
     let imageInfo = {
@@ -227,9 +228,11 @@ async function updatePost(post: IUpdatePost) {
       imageId: post.imageId,
     };
 
+    console.log({ hasFileToUpdate, file: post.file });
+
     if (hasFileToUpdate) {
       const form = new FormData();
-      form.append("file", post.file[0]);
+      form.append("file", post.file ? post.file[0] : "");
       form.append("upload_preset", import.meta.env.VITE_CLOUDINARY_PRESET);
       form.append("cloud_name", import.meta.env.VITE_CLOUDINARY_NAME);
       const image = await axios.post(

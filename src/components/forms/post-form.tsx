@@ -36,7 +36,7 @@ const PostForm = ({
     defaultValues: {
       caption: post ? post.caption : "",
       location: post ? post.location : "",
-      photos: undefined,
+      file: null,
       tags: post ? post.tags.join(", ") : "",
     },
     mode: "onChange",
@@ -56,9 +56,12 @@ const PostForm = ({
 
   async function onSubmit(values: z.infer<typeof CreatePostSchema>) {
     if (action === "create") {
+      if (!values.file || values.file.length === 0) {
+        return toast.error("Please upload an image");
+      }
       const res = await createPost({
         ...values,
-        photos: values.photos[0],
+        file: values.file[0],
         userId: user.id,
       });
 
@@ -69,7 +72,7 @@ const PostForm = ({
     } else {
       const res = await updatePost({
         ...values,
-        file: values.photos,
+        file: values?.file || null,
         postId: post?.$id || "",
         imageUrl: post?.imageUrl,
         imageId: post?.imageId,
@@ -105,10 +108,10 @@ const PostForm = ({
 
         <FormField
           control={form.control}
-          name="photos"
+          name="file"
           render={({ field: { onChange } }) => (
             <FormItem>
-              <FormLabel>Add Photos</FormLabel>
+              <FormLabel>Add File</FormLabel>
               <FormControl>
                 <Input
                   className=""

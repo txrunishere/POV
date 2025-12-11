@@ -31,8 +31,6 @@ const PostAction = ({
 
   const { data: currentUser } = getCurrentUserQuery();
 
-  console.log({ currentUser });
-
   const checkIsSaved = currentUser?.saved.find(
     (savedPost: Models.DefaultRow) => savedPost.post === post.$id,
   );

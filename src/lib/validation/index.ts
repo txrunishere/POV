@@ -32,7 +32,7 @@ export const CreatePostSchema = z.object({
   caption: z.string().min(5, { error: "Too short!!" }).max(2200),
   location: z.string().min(2).max(100),
   tags: z.string(),
-  photos: z.custom<File[]>(),
+  file: z.custom<File[] | null>(),
 });
 type ICreatePost = z.infer<typeof CreatePostSchema>;
 
