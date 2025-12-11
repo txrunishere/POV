@@ -16,6 +16,7 @@ import FileUploader from "../common/FileUploader";
 import { CreatePostSchema } from "@/lib/validation";
 import { createPostMutation } from "@/lib/react-query/mutations";
 import { useAuth } from "@/context/auth-context";
+import { useNavigate } from "react-router";
 
 const PostForm = ({
   post,
@@ -39,21 +40,22 @@ const PostForm = ({
     reValidateMode: "onChange",
   });
 
+  const navigate = useNavigate();
   const { user } = useAuth();
 
-  const {
-    data,
-    mutateAsync: createPost,
-    isPending: createPostLoading,
-  } = createPostMutation();
-
-  console.log(data);
+  const { mutateAsync: createPost, isPending: createPostLoading } =
+    createPostMutation();
 
   async function onSubmit(values: z.infer<typeof CreatePostSchema>) {
-    await createPost({
+    const res = await createPost({
       ...values,
       userId: user.id,
     });
+
+    if (res) {
+      form.reset();
+      navigate("/");
+    }
   }
 
   return (
@@ -126,10 +128,11 @@ const PostForm = ({
         />
         <div className="flex items-center justify-end gap-4">
           <Button variant={"outline"}>Cancel</Button>
-          <Button type="submit">Submit</Button>
+          <Button disabled={createPostLoading} type="submit">
+            Submit
+          </Button>
         </div>
       </form>
-      {data && <img src={data.imageUrl} alt="" />}
     </Form>
   );
 };

@@ -1,7 +1,7 @@
 import { account, appwriteConfig, avatars, storage, tables } from "./config";
 import { ID, Query } from "appwrite";
 import type { INewPost, INewUser } from "@/types";
-import { da } from "zod/v4/locales";
+import axios from "axios";
 
 // REGISTER USER
 const createUser = async (data: INewUser) => {
@@ -85,20 +85,14 @@ const signOutUser = async () => {
 
 const createPost = async (data: INewPost) => {
   try {
-    const uploadImage = await storage.createFile({
-      bucketId: appwriteConfig.appwriteStorageId,
-      fileId: ID.unique(),
-      file: data.photos,
-    });
-
-    if (!uploadImage) throw Error;
-
-    const imageUrl = storage.getFilePreview({
-      bucketId: appwriteConfig.appwriteStorageId,
-      fileId: uploadImage.$id,
-    });
-
-    if (!imageUrl) throw Error;
+    const form = new FormData();
+    form.append("file", data.photos);
+    form.append("upload_preset", "POV-cloudinary");
+    form.append("cloud_name", "dpp16pzli");
+    const image = await axios.post(
+      "https://api.cloudinary.com/v1_1/dpp16pzli/image/upload",
+      form,
+    );
 
     const newPost = await tables.createRow({
       databaseId: appwriteConfig.appwriteDatabaseId,
@@ -108,12 +102,14 @@ const createPost = async (data: INewPost) => {
         creator: data.userId,
         caption: data.caption,
         location: data.location,
-        tags: data.tags?.split(",").forEach((i) => i.trim()),
-        imageId: uploadImage.$id,
-        imageUrl,
+        tags: data.tags?.split(", "),
+        imageId: image.data?.public_id,
+        imageUrl: image.data?.secure_url,
       },
     });
 
+    if (!newPost) {
+    }
     return newPost;
   } catch (error) {
     console.log(error);
