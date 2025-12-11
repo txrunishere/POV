@@ -123,13 +123,81 @@ const fetchRecentPosts = async () => {
     queries: [
       Query.orderDesc("$createdAt"),
       Query.limit(20),
-      Query.select(["*", "creator.*"]),
+      Query.select(["*", "creator.*", "likes.*", "save.*"]),
     ],
   });
 
   if (!posts) throw Error;
 
   return posts;
+};
+
+const likePost = async ({
+  postId,
+  likesArray,
+}: {
+  postId: string;
+  likesArray: string[];
+}) => {
+  try {
+    const updatedPost = await tables.upsertRow({
+      databaseId: appwriteConfig.appwriteDatabaseId,
+      tableId: appwriteConfig.appwritePostsTableId,
+      rowId: postId,
+      data: {
+        likes: likesArray,
+      },
+    });
+
+    if (!updatedPost) throw Error;
+
+    return updatedPost;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const savePost = async ({
+  postId,
+  userId,
+}: {
+  postId: string;
+  userId: string;
+}) => {
+  try {
+    const save = await tables.createRow({
+      databaseId: appwriteConfig.appwriteDatabaseId,
+      tableId: appwriteConfig.appwriteSavesTableId,
+      rowId: ID.unique(),
+      data: {
+        user: userId,
+        post: postId,
+      },
+    });
+
+    if (save) throw Error;
+
+    return save;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const deleteSavedPost = async ({ savedPostId }: { savedPostId: string }) => {
+  try {
+    const savedPost = await tables.deleteRow({
+      databaseId: appwriteConfig.appwriteDatabaseId,
+      tableId: appwriteConfig.appwriteSavesTableId,
+      rowId: savedPostId,
+    });
+
+    if (savedPost) throw Error;
+
+    return { status: "ok" };
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 };
 
 export {
@@ -139,4 +207,7 @@ export {
   signOutUser,
   createPost,
   fetchRecentPosts,
+  likePost,
+  savePost,
+  deleteSavedPost,
 };

@@ -4,9 +4,13 @@ import {
   createUser,
   signInUser,
   signOutUser,
+  likePost,
+  savePost,
+  deleteSavedPost,
 } from "../appwrite/api";
 import type { INewPost, INewUser } from "@/types";
 import { QUERY_KEYS } from "./query-keys";
+import type { Models } from "appwrite";
 
 const registerUserMutation = () => {
   return useMutation({
@@ -39,9 +43,73 @@ const createPostMutation = () => {
   });
 };
 
+const likePostMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: { postId: string; likesArray: string[] }) =>
+      likePost(data),
+    onSuccess: (data: Models.DefaultRow | undefined) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POSTS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      });
+    },
+  });
+};
+
+const savePostMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: { userId: string; postId: string }) => savePost(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POSTS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      });
+    },
+  });
+};
+
+const deleteSavedPostMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: { savedPostId: string }) => deleteSavedPost(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POSTS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      });
+    },
+  });
+};
+
 export {
   registerUserMutation,
   loginUserMutation,
   signoutUserMutation,
   createPostMutation,
+  likePostMutation,
+  savePostMutation,
+  deleteSavedPostMutation,
 };
