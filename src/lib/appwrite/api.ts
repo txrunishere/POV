@@ -1,4 +1,4 @@
-import { account, appwriteConfig, avatars, storage, tables } from "./config";
+import { account, appwriteConfig, avatars, tables } from "./config";
 import { ID, Query } from "appwrite";
 import type { INewPost, INewUser } from "@/types";
 import axios from "axios";
@@ -116,4 +116,27 @@ const createPost = async (data: INewPost) => {
   }
 };
 
-export { createUser, signInUser, getCurrentUser, signOutUser, createPost };
+const fetchRecentPosts = async () => {
+  const posts = await tables.listRows({
+    databaseId: appwriteConfig.appwriteDatabaseId,
+    tableId: appwriteConfig.appwritePostsTableId,
+    queries: [
+      Query.orderDesc("$createdAt"),
+      Query.limit(20),
+      Query.select(["*", "creator.*"]),
+    ],
+  });
+
+  if (!posts) throw Error;
+
+  return posts;
+};
+
+export {
+  createUser,
+  signInUser,
+  getCurrentUser,
+  signOutUser,
+  createPost,
+  fetchRecentPosts,
+};

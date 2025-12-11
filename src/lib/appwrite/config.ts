@@ -1,10 +1,9 @@
-import { Client, Account, TablesDB, Storage, Avatars } from "appwrite";
+import { Client, Account, TablesDB, Avatars } from "appwrite";
 
 export const appwriteConfig = {
   projectId: import.meta.env.VITE_APPWRITE_PROJECT_ID as string,
   projectName: import.meta.env.VITE_APPWRITE_PROJECT_NAME as string,
   appwriteEndpoint: import.meta.env.VITE_APPWRITE_ENDPOINT as string,
-  appwriteStorageId: import.meta.env.VITE_APPWRITE_STORAGE_ID as string,
   appwriteDatabaseId: import.meta.env.VITE_APPWRITE_DATABASE_ID as string,
   appwriteUsersTableId: import.meta.env.VITE_APPWRITE_USERS_TABLE_ID as string,
   appwritePostsTableId: import.meta.env.VITE_APPWRITE_POSTS_TABLE_ID as string,
@@ -18,5 +17,4 @@ client.setEndpoint(appwriteConfig.appwriteEndpoint);
 
 export const account = new Account(client);
 export const tables = new TablesDB(client);
-export const storage = new Storage(client);
 export const avatars = new Avatars(client);
