@@ -8,6 +8,7 @@ import {
   savePost,
   deleteSavedPost,
   updatePost,
+  deletePost,
 } from "../appwrite/api";
 import type { INewPost, INewUser, IUpdatePost } from "@/types";
 import { QUERY_KEYS } from "./query-keys";
@@ -118,6 +119,19 @@ const updatePostMutation = () => {
   });
 };
 
+const deletePostMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ postId }: { postId: string }) => deletePost({ postId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      });
+    },
+  });
+};
+
 export {
   registerUserMutation,
   loginUserMutation,
@@ -127,4 +141,5 @@ export {
   savePostMutation,
   deleteSavedPostMutation,
   updatePostMutation,
+  deletePostMutation,
 };

@@ -208,6 +208,7 @@ const fetchPostById = async ({ postId }: { postId: string }) => {
       databaseId: appwriteConfig.appwriteDatabaseId,
       tableId: appwriteConfig.appwritePostsTableId,
       rowId: postId,
+      queries: [Query.select(["*", "creator.*", "likes.*"])],
     });
 
     if (!post) throw Error;
