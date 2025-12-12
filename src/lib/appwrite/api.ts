@@ -289,6 +289,49 @@ const deletePost = async ({ postId }: { postId: string }) => {
   }
 };
 
+const getInfinitePosts = async ({ pageParams = undefined }) => {
+  let queries: Array<string> = [
+    Query.limit(10),
+    Query.orderDesc("$updatedAt"),
+    Query.select(["*", "creator.*", "likes.*"]),
+  ];
+
+  if (pageParams) queries.push(Query.cursorAfter(pageParams));
+
+  try {
+    const posts = await tables.listRows({
+      databaseId: appwriteConfig.appwriteDatabaseId,
+      tableId: appwriteConfig.appwritePostsTableId,
+      queries,
+    });
+
+    if (!posts) throw Error;
+
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const searchPosts = async ({ searchQuery }: { searchQuery: string }) => {
+  try {
+    const posts = await tables.listRows({
+      databaseId: appwriteConfig.appwriteDatabaseId,
+      tableId: appwriteConfig.appwritePostsTableId,
+      queries: [
+        Query.search("caption", searchQuery),
+        Query.select(["*", "creator.*", "likes.*"]),
+      ],
+    });
+
+    if (!posts) throw Error;
+
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   createUser,
   signInUser,
@@ -302,4 +345,6 @@ export {
   fetchPostById,
   updatePost,
   deletePost,
+  getInfinitePosts,
+  searchPosts,
 };

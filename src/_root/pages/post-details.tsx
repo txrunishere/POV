@@ -1,5 +1,5 @@
 import { Loader, PostAction } from "@/components/common";
-import { getPostByIdMutation } from "@/lib/react-query/queries";
+import { getPostByIdQuery } from "@/lib/react-query/queries";
 import { Link, useParams } from "react-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -14,7 +14,7 @@ const PostDetails = () => {
   const { user } = useAuth();
 
   const { id: postId } = useParams();
-  const { data: post, isLoading } = getPostByIdMutation({
+  const { data: post, isLoading } = getPostByIdQuery({
     postId: postId || "",
   });
 

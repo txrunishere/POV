@@ -1,13 +1,13 @@
 import { Loader } from "@/components/common";
 import PostForm from "@/components/forms/post-form";
-import { getPostByIdMutation } from "@/lib/react-query/queries";
+import { getPostByIdQuery } from "@/lib/react-query/queries";
 import { ImagePlus } from "lucide-react";
 import { useParams } from "react-router";
 
 const UpdatePost = () => {
   const { id: postId } = useParams();
 
-  const { data: post, isLoading } = getPostByIdMutation({
+  const { data: post, isLoading } = getPostByIdQuery({
     postId: postId || "",
   });
 
