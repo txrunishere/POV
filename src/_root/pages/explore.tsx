@@ -4,10 +4,12 @@ import { Input } from "@/components/ui/input";
 import useDebounce from "@/hooks/useDebounce";
 import { getPosts, searchPostsQuery } from "@/lib/react-query/queries";
 import { SortDesc } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
 
 const Explore = () => {
   const [search, setSearch] = useState<string>("");
+  const { ref, inView } = useInView();
 
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setSearch(e.target.value);
@@ -26,6 +28,10 @@ const Explore = () => {
     fetchNextPage,
     hasNextPage,
   } = getPosts();
+
+  useEffect(() => {
+    if (inView && !search) fetchNextPage();
+  }, [search, inView]);
 
   if (!posts) {
     return (
@@ -80,6 +86,11 @@ const Explore = () => {
           )}
         </div>
       </div>
+      {hasNextPage && !search && (
+        <div ref={ref} className="mt-10">
+          <Loader />
+        </div>
+      )}
     </div>
   );
 };

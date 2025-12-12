@@ -32,17 +32,15 @@ const getPostByIdQuery = ({ postId }: { postId: string }) => {
 
 const getPosts = () => {
   return useInfiniteQuery({
-    queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
-    //@ts-ignore
+    queryKey: ["infinite-posts"],
     queryFn: getInfinitePosts,
+    // @ts-ignore
     getNextPageParam: (lastPage) => {
-      if (!lastPage || lastPage.rows.length === 0) return null;
-
-      return lastPage.rows[lastPage.rows.length - 1].$id;
+      const lastRow = lastPage?.rows[lastPage.rows.length - 1];
+      return lastRow ? lastRow.$id : null;
     },
   });
 };
-
 const searchPostsQuery = ({ searchQuery }: { searchQuery: string }) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_SEARCH_POSTS, searchQuery],

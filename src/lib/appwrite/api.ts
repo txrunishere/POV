@@ -289,14 +289,18 @@ const deletePost = async ({ postId }: { postId: string }) => {
   }
 };
 
-const getInfinitePosts = async ({ pageParams = undefined }) => {
-  let queries: Array<string> = [
-    Query.limit(10),
+const getInfinitePosts = async ({ pageParam = null }) => {
+  const queries = [
+    Query.limit(6),
     Query.orderDesc("$updatedAt"),
     Query.select(["*", "creator.*", "likes.*"]),
   ];
 
-  if (pageParams) queries.push(Query.cursorAfter(pageParams));
+  if (pageParam) {
+    queries.push(Query.cursorAfter(pageParam));
+  }
+
+  console.log(pageParam);
 
   try {
     const posts = await tables.listRows({
