@@ -13,7 +13,9 @@ const Home = () => {
           </h2>
           <ul className="flex w-full flex-col justify-between gap-2">
             {fetchPostsLoading && !recentPosts ? (
-              <Loader />
+              <div className="mt-10 flex w-full justify-center">
+                <Loader />
+              </div>
             ) : (
               <>
                 {recentPosts && recentPosts.rows.length > 0 ? (
@@ -28,7 +30,7 @@ const Home = () => {
                       No Post Found!!
                     </p>
                     <p className="text-muted-foreground">
-                      Be the first by creating a post.
+                      Be the first by create a post.
                     </p>
                   </li>
                 )}

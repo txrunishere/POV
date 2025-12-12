@@ -22,12 +22,7 @@ const Explore = () => {
     },
   );
 
-  const {
-    data: posts,
-    isFetching: isPostFetching,
-    fetchNextPage,
-    hasNextPage,
-  } = getPosts();
+  const { data: posts, fetchNextPage, hasNextPage } = getPosts();
 
   useEffect(() => {
     if (inView && !search) fetchNextPage();
@@ -35,7 +30,7 @@ const Explore = () => {
 
   if (!posts) {
     return (
-      <div className="flex w-full items-center justify-center">
+      <div className="mt-20 flex w-full items-center justify-center">
         <Loader />
       </div>
     );

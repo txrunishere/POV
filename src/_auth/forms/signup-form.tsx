@@ -35,7 +35,7 @@ const SignupForm = () => {
     },
   });
 
-  const { checkAuthUser, isLoading: isUserLoading } = useAuth();
+  const { checkAuthUser } = useAuth();
   const navigate = useNavigate();
 
   const { mutateAsync: createNewUser, isPending: userCreateLoading } =
@@ -57,8 +57,8 @@ const SignupForm = () => {
           const isAuthUser = await checkAuthUser();
 
           if (isAuthUser) {
-            form.reset();
             navigate("/");
+            form.reset();
           }
         } else {
           toast.error("Sign in failed, please try again.");
@@ -77,7 +77,7 @@ const SignupForm = () => {
   return (
     <Form {...form}>
       <div className="flex flex-col items-center justify-center gap-2 sm:w-[420px]">
-        <div className="h-11 w-[100%] sm:h-14">
+        <div className="h-11 w-full sm:h-14">
           <img
             src="./pov-updated.png"
             className="h-full w-full object-cover object-center"
