@@ -1,7 +1,7 @@
 import type { IUser } from "@/types";
 import { createContext, useContext, useEffect, useState } from "react";
 import { getCurrentUser } from "@/lib/appwrite/api";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate } from "react-router";
 
 type IAuthContext = {
   user: IUser;
@@ -66,7 +66,6 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    console.log(1);
     if (
       localStorage.getItem("cookieFallback") === "[]" ||
       localStorage.getItem("cookieFallback") === "{}" ||
