@@ -29,7 +29,11 @@ const LeftSidebar = () => {
     <section className="hidden min-w-[270px] flex-col justify-center bg-black px-6 pt-0 pb-8 md:flex">
       <div className="flex-1">
         <Link to={"/"}>
-          <img src="pov-updated.png" alt="POV-logo" className="w-[200px]" />
+          <img
+            src="pov-updated.png"
+            alt="POV-logo"
+            className="h-[150px] w-[200px] object-cover"
+          />
         </Link>
         <div className="">
           <div className="space-y-10">
