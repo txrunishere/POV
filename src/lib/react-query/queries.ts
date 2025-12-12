@@ -41,6 +41,7 @@ const getPosts = () => {
     },
   });
 };
+
 const searchPostsQuery = ({ searchQuery }: { searchQuery: string }) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_SEARCH_POSTS, searchQuery],

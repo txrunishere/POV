@@ -300,8 +300,6 @@ const getInfinitePosts = async ({ pageParam = null }) => {
     queries.push(Query.cursorAfter(pageParam));
   }
 
-  console.log(pageParam);
-
   try {
     const posts = await tables.listRows({
       databaseId: appwriteConfig.appwriteDatabaseId,
