@@ -6,6 +6,7 @@ import { useAuth } from "@/context/auth-context";
 import { signoutUserMutation } from "@/lib/react-query/mutations";
 import { sidebarLinks } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import Loader from "./loader";
 
 const LeftSidebar = () => {
   const {
@@ -16,7 +17,7 @@ const LeftSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { user } = useAuth();
+  const { user, isLoading: isUserLoading } = useAuth();
 
   useEffect(() => {
     if (isSuccess) {
@@ -28,7 +29,7 @@ const LeftSidebar = () => {
     <section className="hidden min-w-[270px] flex-col justify-center bg-black px-6 pt-0 pb-8 md:flex">
       <div className="flex-1">
         <Link to={"/"}>
-          <img src="pov-logo.png" alt="POV-logo" className="w-[200px]" />
+          <img src="pov-updated.png" alt="POV-logo" className="w-[200px]" />
         </Link>
         <div className="">
           <div className="space-y-10">
@@ -37,15 +38,19 @@ const LeftSidebar = () => {
               className="flex items-center gap-2"
             >
               <img
-                src={user?.imageUrl}
+                src={
+                  isUserLoading ? "./placeholder-profile.jpg" : user.imageUrl
+                }
                 className="size-12 rounded-full"
                 alt={`${user.username}-profile-picture`}
               />
               <div>
-                <p className="text-xl font-bold">{user.name}</p>
-                <p className="text-muted-foreground text-sm">
-                  @{user.username}
-                </p>
+                <>
+                  <p className="text-xl font-bold">{user.name || "user"}</p>
+                  <p className="text-muted-foreground text-sm">
+                    @{user.username || "user"}
+                  </p>
+                </>
               </div>
             </Link>
             <ul className="w-full space-y-4">

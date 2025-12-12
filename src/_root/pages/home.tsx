@@ -15,11 +15,24 @@ const Home = () => {
             {fetchPostsLoading && !recentPosts ? (
               <Loader />
             ) : (
-              recentPosts?.rows.map((post) => (
-                <li key={post.$createdAt}>
-                  <PostCard post={post} />
-                </li>
-              ))
+              <>
+                {recentPosts && recentPosts.rows.length > 0 ? (
+                  recentPosts?.rows.map((post) => (
+                    <li key={post.$createdAt}>
+                      <PostCard post={post} />
+                    </li>
+                  ))
+                ) : (
+                  <li className="mt-10 text-center">
+                    <p className="text-xl font-semibold md:text-2xl">
+                      No Post Found!!
+                    </p>
+                    <p className="text-muted-foreground">
+                      Be the first by creating a post.
+                    </p>
+                  </li>
+                )}
+              </>
             )}
           </ul>
         </div>

@@ -13,7 +13,7 @@ const TopBar = () => {
   } = signoutUserMutation();
   const navigate = useNavigate();
 
-  const { user } = useAuth();
+  const { user, isLoading: isUserLoading } = useAuth();
 
   useEffect(() => {
     if (isSuccess) {
@@ -25,7 +25,11 @@ const TopBar = () => {
     <section className="sticky top-0 z-50 w-full bg-black md:hidden">
       <nav className="flex items-center justify-between px-4">
         <Link className="" to={"/"}>
-          <img className="size-16" src="./pov.png" alt="pov-logo" />
+          <img
+            className="size-20 object-cover"
+            src="./pov-updated.png"
+            alt="pov-logo"
+          />
         </Link>
         <div className="flex items-center gap-4">
           <Button
@@ -36,11 +40,11 @@ const TopBar = () => {
           >
             <LogOut />
           </Button>
-          <Link to={`/profile/${user.id}`}>
+          <Link to={`/profile/${user?.id}`}>
             <img
               className="size-8 rounded-full"
-              src={user.imageUrl}
-              alt={`${user.username}-profile-picture`}
+              src={isUserLoading ? "./placeholder-profile.jpg" : user.imageUrl}
+              alt={`${user?.username}-profile-picture`}
             />
           </Link>
         </div>

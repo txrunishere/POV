@@ -32,7 +32,7 @@ const getPostByIdQuery = ({ postId }: { postId: string }) => {
 
 const getPosts = () => {
   return useInfiniteQuery({
-    queryKey: ["infinite-posts"],
+    queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
     queryFn: getInfinitePosts,
     // @ts-ignore
     getNextPageParam: (lastPage) => {

@@ -8,6 +8,7 @@ import {
 } from "@/lib/react-query/mutations";
 import { useEffect, useState } from "react";
 import { getCurrentUserQuery } from "@/lib/react-query/queries";
+import Loader from "./loader";
 
 const PostAction = ({
   post,
@@ -77,15 +78,24 @@ const PostAction = ({
   return (
     <div className="flex w-full items-center justify-between">
       <div className="flex items-center gap-2">
-        <Button
+        <button
           disabled={likePostLoading}
+          className={`${likePostLoading ? "opacity-50" : "opacity-100"}`}
           onClick={handleLikePost}
-          size={"icon-lg"}
-          variant={"ghost"}
         >
-          {checkIsLiked(likesList, userId) ? <Heart fill="white" /> : <Heart />}
-        </Button>
-        <p>{post.likes?.length}</p>
+          {likePostLoading ? (
+            <Loader size={14} />
+          ) : (
+            <>
+              {checkIsLiked(likesList, userId) ? (
+                <Heart size={16} fill="white" />
+              ) : (
+                <Heart size={16} />
+              )}
+            </>
+          )}
+        </button>
+        <p className="text-sm">{post.likes?.length}</p>
       </div>
       <div className="flex items-center gap-2">
         <Button onClick={handleSavePost} size={"icon-lg"} variant={"ghost"}>
