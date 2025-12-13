@@ -72,12 +72,12 @@ const Explore = () => {
               />
             )
           ) : (
-            <>
+            <div className="flex flex-col gap-4">
               {posts.pages.map(
                 (posts, index) =>
                   posts && <GridPostList key={`page-${index}`} posts={posts} />,
               )}
-            </>
+            </div>
           )}
         </div>
       </div>

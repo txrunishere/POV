@@ -7,19 +7,25 @@ import { signoutUserMutation } from "@/lib/react-query/mutations";
 
 const TopBar = () => {
   const {
-    mutate: signOut,
+    mutateAsync: signOut,
     isPending: userSignoutLoading,
     isSuccess,
   } = signoutUserMutation();
   const navigate = useNavigate();
 
-  const { user, isLoading: isUserLoading } = useAuth();
+  const { user, isLoading: isUserLoading, setIsAuthenticated } = useAuth();
 
   useEffect(() => {
     if (isSuccess) {
       navigate("/sign-in");
     }
   }, [isSuccess]);
+
+  const handleLogoutUser = async () => {
+    const res = await signOut();
+
+    if (res) setIsAuthenticated(false);
+  };
 
   return (
     <section className="sticky top-0 z-50 w-full bg-black md:hidden">
@@ -36,7 +42,7 @@ const TopBar = () => {
             disabled={userSignoutLoading}
             size={"icon-sm"}
             variant={"ghost"}
-            onClick={() => signOut()}
+            onClick={handleLogoutUser}
           >
             <LogOut />
           </Button>
