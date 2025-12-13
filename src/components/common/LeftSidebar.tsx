@@ -6,24 +6,31 @@ import { useAuth } from "@/context/auth-context";
 import { signoutUserMutation } from "@/lib/react-query/mutations";
 import { sidebarLinks } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import Loader from "./loader";
 
 const LeftSidebar = () => {
   const {
-    mutate: signOut,
+    mutateAsync: signOut,
     isPending: userSignoutLoading,
     isSuccess,
   } = signoutUserMutation();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { user, isLoading: isUserLoading } = useAuth();
+  const { user, isLoading: isUserLoading, setIsAuthenticated } = useAuth();
 
   useEffect(() => {
     if (isSuccess) {
       navigate("/sign-in");
     }
   }, [isSuccess]);
+
+  const handleUserSignout = async () => {
+    const res = await signOut();
+
+    if (res) {
+      setIsAuthenticated(false);
+    }
+  };
 
   return (
     <section className="hidden min-w-[270px] flex-col justify-center bg-black px-6 pt-0 pb-8 md:flex">
@@ -87,7 +94,7 @@ const LeftSidebar = () => {
           disabled={userSignoutLoading}
           variant={"ghost"}
           size={"lg"}
-          onClick={() => signOut()}
+          onClick={handleUserSignout}
         >
           <span>
             <LogOut />
