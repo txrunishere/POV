@@ -67,6 +67,9 @@ const likePostMutation = () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_INFINITE_POSTS, data?.id],
       });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_SAVED_POSTS, data?.id],
+      });
     },
   });
 };

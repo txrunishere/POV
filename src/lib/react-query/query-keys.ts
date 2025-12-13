@@ -5,4 +5,5 @@ export const QUERY_KEYS = {
   GET_POSTS: "getPosts",
   GET_INFINITE_POSTS: "getInfinitePosts",
   GET_SEARCH_POSTS: "getSearchPosts",
+  GET_SAVED_POSTS: "getSavedPosts",
 };

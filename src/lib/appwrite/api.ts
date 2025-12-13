@@ -334,6 +334,27 @@ const searchPosts = async ({ searchQuery }: { searchQuery: string }) => {
   }
 };
 
+const getSavedPosts = async ({ userId }: { userId: string }) => {
+  try {
+    const savedPosts = await tables.listRows({
+      databaseId: appwriteConfig.appwriteDatabaseId,
+      tableId: appwriteConfig.appwriteSavesTableId,
+      queries: [
+        Query.equal("user", userId),
+        Query.select(["*", "post.*", "post.likes.*"]),
+      ],
+    });
+
+    console.log(savedPosts);
+
+    if (!savedPosts) throw Error;
+
+    return savedPosts;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   createUser,
   signInUser,
@@ -349,4 +370,5 @@ export {
   deletePost,
   getInfinitePosts,
   searchPosts,
+  getSavedPosts,
 };
