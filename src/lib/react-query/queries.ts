@@ -7,6 +7,7 @@ import {
   getInfinitePosts,
   searchPosts,
   getSavedPosts,
+  getAllUsers,
 } from "../appwrite/api";
 
 const getRecentPosts = () => {
@@ -59,6 +60,14 @@ const useSavedPosts = (userId: string) => {
   });
 };
 
+const useGetUsers = (userId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USERS],
+    queryFn: () => getAllUsers({ userId }),
+    enabled: !!userId,
+  });
+};
+
 export {
   getRecentPosts,
   getCurrentUserQuery,
@@ -66,4 +75,5 @@ export {
   getPosts,
   searchPostsQuery,
   useSavedPosts,
+  useGetUsers,
 };

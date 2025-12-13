@@ -66,7 +66,13 @@ const getCurrentUser = async () => {
       tableId: appwriteConfig.appwriteUsersTableId,
       queries: [
         Query.equal("accountId", session.$id),
-        Query.select(["*", "liked.$id", "saved.*"]),
+        Query.select([
+          "*",
+          "liked.$id",
+          "saved.*",
+          "followers.*",
+          "following.*",
+        ]),
       ],
     });
 
@@ -355,6 +361,64 @@ const getSavedPosts = async ({ userId }: { userId: string }) => {
   }
 };
 
+const getAllUsers = async ({ userId }: { userId: string }) => {
+  try {
+    const users = await tables.listRows({
+      databaseId: appwriteConfig.appwriteDatabaseId,
+      tableId: appwriteConfig.appwriteUsersTableId,
+      queries: [Query.notEqual("$id", userId)],
+    });
+
+    if (!users) throw Error;
+
+    return users;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const followUser = async ({
+  currentUserId,
+  followingUserId,
+}: {
+  currentUserId: string;
+  followingUserId: string;
+}) => {
+  try {
+    const followUser = await tables.createRow({
+      databaseId: appwriteConfig.appwriteDatabaseId,
+      tableId: appwriteConfig.appwriteFollowTableId,
+      rowId: ID.unique(),
+      data: {
+        user: currentUserId,
+        follows: followingUserId,
+      },
+    });
+
+    if (!followUser) throw Error;
+
+    return followUser;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const unFollowUser = async ({ followId }: { followId: string }) => {
+  try {
+    const unFollowUser = await tables.deleteRow({
+      databaseId: appwriteConfig.appwriteDatabaseId,
+      tableId: appwriteConfig.appwriteFollowTableId,
+      rowId: followId,
+    });
+
+    if (!unFollowUser) throw Error;
+
+    return unFollowUser;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   createUser,
   signInUser,
@@ -371,4 +435,7 @@ export {
   getInfinitePosts,
   searchPosts,
   getSavedPosts,
+  getAllUsers,
+  followUser,
+  unFollowUser,
 };

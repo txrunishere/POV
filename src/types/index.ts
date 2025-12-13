@@ -1,3 +1,5 @@
+import type { Models } from "appwrite";
+
 export type INavLink = {
   imgURL: string;
   route: string;
@@ -38,6 +40,8 @@ export type IUser = {
   email: string;
   imageUrl: string;
   bio: string;
+  followers: Array<Models.DefaultRow> | null;
+  following: Array<Models.DefaultRow> | null;
 };
 
 export type INewUser = {

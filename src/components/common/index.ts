@@ -6,6 +6,7 @@ import PostCard from "./PostCard";
 import PostAction from "./PostAction";
 import SearchResults from "./SearchResults";
 import GridPostList from "./GridPostList";
+import UserCard from "./UserCard";
 
 export {
   Loader,
@@ -16,4 +17,5 @@ export {
   PostAction,
   SearchResults,
   GridPostList,
+  UserCard,
 };

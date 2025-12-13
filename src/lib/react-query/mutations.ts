@@ -9,6 +9,8 @@ import {
   deleteSavedPost,
   updatePost,
   deletePost,
+  followUser,
+  unFollowUser,
 } from "../appwrite/api";
 import type { INewPost, INewUser, IUpdatePost } from "@/types";
 import { QUERY_KEYS } from "./query-keys";
@@ -138,6 +140,45 @@ const deletePostMutation = () => {
   });
 };
 
+const useFollowUserMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      currentUserId,
+      followingUserId,
+    }: {
+      currentUserId: string;
+      followingUserId: string;
+    }) => followUser({ currentUserId, followingUserId }),
+
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER, variables.currentUserId],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER, variables.followingUserId],
+      });
+    },
+  });
+};
+
+const useUnFollowUserMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ followId }: { followId: string }) =>
+      unFollowUser({ followId }),
+    mutationKey: [QUERY_KEYS.GET_USERS],
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER, variables.followId],
+      });
+    },
+  });
+};
+
 export {
   registerUserMutation,
   loginUserMutation,
@@ -148,4 +189,6 @@ export {
   deleteSavedPostMutation,
   updatePostMutation,
   deletePostMutation,
+  useFollowUserMutation,
+  useUnFollowUserMutation,
 };
