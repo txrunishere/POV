@@ -40,8 +40,6 @@ export type IUser = {
   email: string;
   imageUrl: string;
   bio: string;
-  followers: Array<Models.DefaultRow> | null;
-  following: Array<Models.DefaultRow> | null;
 };
 
 export type INewUser = {

@@ -77,7 +77,7 @@ const SignupForm = () => {
   return (
     <Form {...form}>
       <div className="flex flex-col items-center justify-center gap-2 sm:w-[420px]">
-        <div className="h-11 w-full sm:h-14">
+        <div className="h-8 w-[70%] sm:h-14">
           <img
             src="./pov-updated.png"
             className="h-full w-full object-cover object-center"

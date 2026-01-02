@@ -1,41 +1,8 @@
 import type { Models } from "appwrite";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { Button } from "../ui/button";
-import {
-  useFollowUserMutation,
-  useUnFollowUserMutation,
-} from "@/lib/react-query/mutations";
 
-const UserCard = ({
-  user,
-  fullUser,
-}: {
-  user: Models.DefaultRow;
-  fullUser: Models.DefaultRow;
-}) => {
-  const isFollowed = fullUser.following?.find(
-    (followingUser: Models.DefaultRow) => followingUser.follows === user.$id,
-  );
-
-  const { mutateAsync: followUser, isPending: isFollowUserPending } =
-    useFollowUserMutation();
-
-  const { mutateAsync: unFollowUser, isPending: isUnFollowUserPending } =
-    useUnFollowUserMutation();
-
-  const handleFollowUser = async () => {
-    if (isFollowed) {
-      await unFollowUser({
-        followId: isFollowed.$id,
-      });
-    } else {
-      await followUser({
-        currentUserId: fullUser.$id,
-        followingUserId: user.$id,
-      });
-    }
-  };
-
+const UserCard = ({ user }: { user: Models.DefaultRow }) => {
   return (
     <Card className="gap-4">
       <CardHeader className="justify-center">
@@ -48,13 +15,8 @@ const UserCard = ({
         </p>
       </CardContent>
       <CardFooter>
-        <Button
-          onClick={handleFollowUser}
-          className="w-full"
-          variant={"outline"}
-          disabled={isFollowUserPending || isUnFollowUserPending}
-        >
-          {isFollowed ? "Unfollow" : "Follow"}
+        <Button className="w-full" variant={"outline"}>
+          Follow
         </Button>
       </CardFooter>
     </Card>

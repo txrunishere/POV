@@ -12,15 +12,13 @@ type IAuthContext = {
   checkAuthUser: () => Promise<boolean>;
 };
 
-const INITIAL_USER = {
+const INITIAL_USER: IUser = {
   id: "",
   name: "",
   username: "",
   email: "",
   imageUrl: "",
   bio: "",
-  following: null,
-  followers: null,
 };
 
 const INITIAL_VALUES: IAuthContext = {
@@ -54,8 +52,6 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
           imageUrl: currentUser.imageUrl,
           name: currentUser.name,
           username: currentUser.username,
-          followers: currentUser.followers,
-          following: currentUser.following,
         });
         setIsAuthenticated(true);
         return true;

@@ -1,11 +1,9 @@
 import { Loader, UserCard } from "@/components/common";
 import { useAuth } from "@/context/auth-context";
-import { getCurrentUserQuery, useGetUsers } from "@/lib/react-query/queries";
+import { useGetUsers } from "@/lib/react-query/queries";
 
 const AllUsers = () => {
   const { user: currentUser } = useAuth();
-
-  const { data: fullUser } = getCurrentUserQuery();
 
   const { data: users, isLoading: isUserLoading } = useGetUsers(currentUser.id);
 
@@ -15,12 +13,10 @@ const AllUsers = () => {
         <h2 className="text-xl font-semibold md:text-2xl">Users</h2>
 
         <div className="grid grid-cols-2 gap-2 lg:grid-cols-3">
-          {isUserLoading && fullUser ? (
+          {isUserLoading ? (
             <Loader />
           ) : (
-            users?.rows.map((user) => (
-              <UserCard key={user.$id} user={user} fullUser={fullUser!} />
-            ))
+            users?.rows.map((user) => <UserCard key={user.$id} user={user} />)
           )}
         </div>
       </div>
