@@ -14,7 +14,7 @@ const Explore = () => {
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setSearch(e.target.value);
 
-  const debouncedValue = useDebounce(search, 700);
+  const debouncedValue = useDebounce<string>(search, 700);
 
   const { data: searchResult, isFetching: isSearchFetching } = searchPostsQuery(
     {

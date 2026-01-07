@@ -111,8 +111,6 @@ const createPost = async (data: INewPost) => {
       },
     });
 
-    if (!newPost) {
-    }
     return newPost;
   } catch (error) {
     console.log(error);

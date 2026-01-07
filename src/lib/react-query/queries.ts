@@ -38,7 +38,7 @@ const getPosts = () => {
     queryFn: getInfinitePosts,
     // @ts-ignore
     getNextPageParam: (lastPage) => {
-      const lastRow = lastPage?.rows[lastPage.rows.length - 1];
+      const lastRow = lastPage?.rows[lastPage.rows.length - 1]; // extract id of last document in page so, it helps us to fetch next documents after that id in appwrite using cursorAfter
       return lastRow ? lastRow.$id : null;
     },
   });

@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <div className="flex flex-1">
       <div className="flex flex-1 flex-col items-center gap-10 overflow-y-auto px-5 py-10 md:px-8 lg:p-14">
-        <div className="flex w-full max-w-screen-sm flex-col items-center gap-6 md:gap-9">
+        <div className="flex w-full max-w-2xl flex-col items-center gap-6 md:gap-9">
           <h2 className="flex w-full items-center justify-start text-xl font-semibold md:text-2xl">
             Home Feed
           </h2>

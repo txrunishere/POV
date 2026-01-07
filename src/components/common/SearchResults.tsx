@@ -9,8 +9,6 @@ const SearchResults = ({
   isSearchFetching: boolean;
   searchPosts: Models.RowList<Models.DefaultRow>;
 }) => {
-  console.log(isSearchFetching);
-
   if (isSearchFetching) return <Loader />;
 
   if (searchPosts.rows.length > 0) {
