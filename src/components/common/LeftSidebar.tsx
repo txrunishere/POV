@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
 import { Button } from "../ui/button";
 import { LogOut } from "lucide-react";
-import { useAuth } from "@/context/auth-context";
+import { useAuth } from "@/hooks/useAuth";
 import { signoutUserMutation } from "@/lib/react-query/mutations";
 import { sidebarLinks } from "@/lib/constants";
 import { cn } from "@/lib/utils";

@@ -79,7 +79,9 @@ const getCurrentUser = async () => {
 
 const signOutUser = async () => {
   try {
-    const res = await account.deleteSession("current");
+    const res = await account.deleteSession({
+      sessionId: "current",
+    });
     return res;
   } catch (error) {
     console.log(error);

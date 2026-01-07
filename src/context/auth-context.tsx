@@ -30,7 +30,7 @@ const INITIAL_VALUES: IAuthContext = {
   checkAuthUser: async () => false,
 };
 
-const AuthContext = createContext<IAuthContext>(INITIAL_VALUES);
+export const AuthContext = createContext<IAuthContext>(INITIAL_VALUES);
 
 const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<IUser>(INITIAL_USER);
@@ -74,7 +74,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
       navigate("/sign-in");
     }
     checkAuthUser();
-  }, []);
+  }, [navigate]);
 
   const value: IAuthContext = {
     user,
@@ -89,5 +89,3 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default AuthContextProvider;
-
-export const useAuth = () => useContext(AuthContext);

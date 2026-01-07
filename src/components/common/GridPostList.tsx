@@ -1,4 +1,4 @@
-import { useAuth } from "@/context/auth-context";
+import { useAuth } from "@/hooks/useAuth";
 import type { Models } from "appwrite";
 import { Link } from "react-router";
 import PostAction from "./PostAction";

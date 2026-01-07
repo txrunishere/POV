@@ -20,7 +20,7 @@ import {
 } from "@/lib/react-query/mutations";
 import { toast } from "sonner";
 import type { AppwriteException } from "appwrite";
-import { useAuth } from "@/context/auth-context";
+import { useAuth } from "@/hooks/useAuth";
 
 const SignupForm = () => {
   const form = useForm<ISignUpSchema>({

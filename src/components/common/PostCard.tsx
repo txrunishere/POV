@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Edit } from "lucide-react";
-import { useAuth } from "@/context/auth-context";
+import { useAuth } from "@/hooks/useAuth";
 import PostAction from "./PostAction";
 
 dayjs().format();

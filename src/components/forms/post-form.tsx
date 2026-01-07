@@ -17,7 +17,7 @@ import {
   createPostMutation,
   updatePostMutation,
 } from "@/lib/react-query/mutations";
-import { useAuth } from "@/context/auth-context";
+import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import type { Models } from "appwrite";

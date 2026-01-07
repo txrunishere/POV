@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash } from "lucide-react";
-import { useAuth } from "@/context/auth-context";
+import { useAuth } from "@/hooks/useAuth";
 import { deletePostMutation } from "@/lib/react-query/mutations";
 
 dayjs().format();

@@ -1,5 +1,5 @@
 import { Loader, PostAction } from "@/components/common";
-import { useAuth } from "@/context/auth-context";
+import { useAuth } from "@/hooks/useAuth";
 import { useSavedPosts } from "@/lib/react-query/queries";
 
 const Saved = () => {

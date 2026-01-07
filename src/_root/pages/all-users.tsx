@@ -1,5 +1,5 @@
 import { Loader, UserCard } from "@/components/common";
-import { useAuth } from "@/context/auth-context";
+import { useAuth } from "@/hooks/useAuth";
 import { useGetUsers } from "@/lib/react-query/queries";
 
 const AllUsers = () => {

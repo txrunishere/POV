@@ -16,7 +16,7 @@ import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { loginUserMutation } from "@/lib/react-query/mutations";
 import type { AppwriteException } from "appwrite";
-import { useAuth } from "@/context/auth-context";
+import { useAuth } from "@/hooks/useAuth";
 
 const SigninForm = () => {
   const form = useForm<ISignInSchema>({
